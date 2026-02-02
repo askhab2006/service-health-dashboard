@@ -53,14 +53,14 @@ async def check_service_now(service_id: int, db: SessionDep):
     db_service = await crud.get_service(db=db, service_id=service_id)
     if not db_service:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Сервис не найден")
-    result_data = await health_check.run_check(db_service.url)
+    result_data = await health_check.check_single_service(db_service)
     check_create = schemas.CheckResultCreate(**result_data, service_id=service_id)
     return await crud.create_check_result(db, check_result=check_create)
 
 
 @router.get("/checks/latest", response_model=List[schemas.CheckResultResponse], tags=["Checks"])
 async def get_latest_checks(db: SessionDep):
-    results = await crud.get_latest_check_results(db)
+    results = await crud.get_all_latest_check_results(db)
     return results
 
 

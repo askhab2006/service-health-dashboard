@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 
 class Settings(BaseSettings):
@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     TELEGRAM_BOT_TOKEN: Optional[str] = None
     TELEGRAM_CHAT_ID: Optional[int] = None
 
-    class Config:
-        env_file = ".env"
+    # Новый формат вместо class Config
+    model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

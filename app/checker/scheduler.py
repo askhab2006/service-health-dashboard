@@ -16,7 +16,7 @@ class SchedulerManager:
                     continue
                 result_data = await check_single_service(service)
                 
-                last_result = await crud.get_latest_check_result(db, service_id=service.id)
+                last_result = await crud.get_latest_check_results(db, service_id=service.id)
 
                 if last_result and last_result.status != result_data["status"]:
                     icon = "🟢" if result_data["status"] == "UP" else "🔴"

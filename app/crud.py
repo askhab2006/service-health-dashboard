@@ -50,7 +50,7 @@ async def create_check_result(db: AsyncSession, check_result: CheckResultCreate)
     await db.refresh(db_object)
     return db_object
 
-async def get_latest_check_result(db: AsyncSession, service_id: int):
+async def get_latest_check_results(db: AsyncSession, service_id: int):
     stmt = (
         select(models.CheckResult)
         .where(models.CheckResult.service_id == service_id)
@@ -71,3 +71,11 @@ async def get_check_results_for_service(db: AsyncSession, service_id: int, skip:
     result = await db.execute(stmt)
     return result.scalars().all()
 
+async def get_all_latest_check_results(db: AsyncSession):
+    stmt = (
+        select(CheckResult)
+        .distinct(CheckResult.service_id)
+        .order_by(CheckResult.service_id, CheckResult.checked_at.desc())
+    )
+    result = await db.execute(stmt)
+    return result.scalars().all()
