@@ -14,10 +14,14 @@ from .database import SessionDep
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    from app.database import engine, Base
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    
     scheduler_manager.start_scheduler()
     yield
     scheduler_manager.stop_scheduler()
-
+    
 app = FastAPI(title="Service Health Dashboard", lifespan=lifespan)
 
 
@@ -26,7 +30,6 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 app.include_router(api_router, prefix="/api/v1")
-
 
 
 @app.get("/", response_class=HTMLResponse)

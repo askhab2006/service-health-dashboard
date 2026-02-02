@@ -4,13 +4,17 @@ from .config import settings
 from fastapi import Depends
 from typing import Annotated
 
+
 engine = create_async_engine(settings.DATABASE_URL, echo=settings.DEBUG)
 
 new_session = async_sessionmaker(
     engine,
     class_=AsyncSession, 
     expire_on_commit=False
-    )
+)
+
+
+SessionLocal = new_session
 
 class Base(DeclarativeBase):
     pass

@@ -60,3 +60,14 @@ async def get_latest_check_result(db: AsyncSession, service_id: int):
     result = await db.execute(stmt)
     return result.scalar_one_or_none()
 
+async def get_check_results_for_service(db: AsyncSession, service_id: int, skip: int = 0, limit: int = 100):
+    stmt = (
+        select(CheckResult)
+        .where(CheckResult.service_id == service_id)
+        .order_by(CheckResult.checked_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    result = await db.execute(stmt)
+    return result.scalars().all()
+

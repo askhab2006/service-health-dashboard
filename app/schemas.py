@@ -24,7 +24,7 @@ class ServiceResponse(ServiceBase):
     model_config = ConfigDict(from_attributes=True)
 
 class CheckResultBase(BaseModel):
-    status: int
+    status: str
     response_time: float
     status_code: Optional[int] = None
     error_message: Optional[str] = None
