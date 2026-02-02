@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Детали: {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/" class="btn btn-outline-secondary btn-sm">← Назад</a>
+    <h2 class="mt-3">{{ service.name }} <small class="text-muted">({{ service.url }})</small></h2>
+</div>
+
+<div class="row">
+    <!-- Карточка с графиком -->
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white"><strong>График времени ответа (ms)</strong></div>
+            <div class="card-body">
+                <canvas id="responseChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Карточка со статусом -->
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white"><strong>Информация</strong></div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Интервал: {{ service.check_interval }} мин</li>
+                <li class="list-group-item">Статус: 
+                    <span class="badge {% if service.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                        {{ "Активен" if service.is_active else "Пауза" }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('responseChart').getContext('2d');
+    
+    // Подготавливаем данные из Jinja2 для JS
+    // 1. Формируем массив меток (строки времени)
+    const labels = [
+        {% for res in results %}
+            "{{ res.checked_at.strftime('%H:%M:%S') }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+// 2. Формируем массив данных (числа ms)
+    const dataPoints = [
+        {% for res in results %}
+            {{ res.response_time }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Время ответа (мс)',
+                data: dataPoints,
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}

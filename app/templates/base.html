@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Service Monitor{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
+    
+    <!-- Подключаем твою статику (Шаг 3.3) -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+    
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar-brand { font-weight: bold; }
+        footer { margin-top: 50px; color: #6c757d; }
+    </style>
+</head>
+<body>
+
+    <!-- Навигационная панель по ТЗ -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">🟢 HealthCheck Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/docs">API Документация</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент (сюда будут вставляться другие страницы) -->
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center pb-4">
+        <hr>
+        <small>&copy; 2024 Service Health Dashboard — Portfolio Project</small>
+    </footer>
+
+    <!-- Bootstrap 5 JS (обязательно для работы кнопок и меню) -->
+    <script src="https://cdn.jsdelivr.net"></script>
+    
+    <!-- Блок для скриптов (например, для Chart.js) -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>
